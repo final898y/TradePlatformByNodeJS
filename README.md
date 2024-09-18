@@ -7,4 +7,3 @@ Rewrite the exercise.
 3. yarn install
 ## 啟動
 輸入:yarn start  
-    ts-node index.ts  
