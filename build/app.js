@@ -4,15 +4,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const node_process_1 = __importDefault(require("node:process"));
+const env_1 = __importDefault(require("./src/env"));
+const index_1 = __importDefault(require("./routers/index"));
+const user_1 = __importDefault(require("./routers/user"));
 const app = (0, express_1.default)();
-const port = 3000;
-app.set('view engine', 'pug');
-app.get('/', (req, res) => {
-    res.render('index', { title: 'Hey', message: 'Hello there!' });
-    //res.send('Hello World!');
-});
+const port = env_1.default.PORT;
+app.set("view engine", "pug");
+app.use("/", index_1.default);
+app.use("/api", user_1.default);
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
-    console.log(node_process_1.default.env.NODE_ENV);
+    console.log(env_1.default.NODE_ENV);
 });

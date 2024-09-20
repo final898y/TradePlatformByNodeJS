@@ -1,0 +1,59 @@
+name: tradeWeb
+networks:
+  TradePlatform_Network:
+    driver: bridge
+services:
+  tradeplatform:
+    image: ${DOCKER_REGISTRY-}expresstest
+    container_name: TradePlatform-webapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "13000:3000"
+    networks: 
+        TradePlatform_Network:
+    depends_on:
+        - mysql
+        - redis
+        - mongo
+  mysql:
+    image: mysql:latest
+    container_name: TradePlatform-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: tpf
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: tpf
+      LANG: C.UTF-8
+    networks: 
+        TradePlatform_Network:
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./src/database/MySQL/:/docker-entrypoint-initdb.d/:ro
+    command: [
+      '--character-set-server=utf8mb4', 
+      '--collation-server=utf8mb4_general_ci'
+    ]
+  redis:
+    image: redis:latest
+    container_name: TradePlatform-redis
+    # command : --port 6379
+    networks: 
+        TradePlatform_Network:
+    ports:
+      - 6379:6379
+    # volumes:
+    #   - ./Feeds/Redis/6379:/data
+  mongo:
+    image: mongo:latest
+    container_name: TradePlatform-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: tpf
+    volumes:
+      - ./src/database//Mongo/:/docker-entrypoint-initdb.d/:ro
+    ports:
+      - 27018:27017
+    networks:
+      - TradePlatform_Network
