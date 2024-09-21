@@ -12,27 +12,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userService_1 = __importDefault(require("../Services/userService"));
-const getAllUsers = (req, res) => {
-    res.send("Return all users");
-};
-const GetUserDetail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const UID = req.query.uid;
-    try {
-        const results = yield userService_1.default.GetUserDetail(UID);
-        if (results.length === 0) {
-            res.status(404).send("User not found");
-            return;
+const userRepository_1 = __importDefault(require("../Repository/userRepository"));
+function GetUserDetail(UID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            return userRepository_1.default.GetUserDetail(UID);
         }
-        res.json(results[0]);
-    }
-    catch (error) {
-        res.status(500).send("Error fetching user");
-        console.error(error);
-    }
-});
-// 將所有方法打包成一個默認導出
+        catch (error) {
+            throw error;
+        }
+    });
+}
 exports.default = {
-    getAllUsers,
-    GetUserDetail,
+    GetUserDetail
 };

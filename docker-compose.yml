@@ -2,6 +2,11 @@ name: tradeWeb
 networks:
   TradePlatform_Network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
+          ip_range: 172.28.0.0/24
+          gateway: 172.28.0.1
 services:
   tradeplatform:
     image: ${DOCKER_REGISTRY-}expresstest
@@ -38,7 +43,6 @@ services:
   redis:
     image: redis:latest
     container_name: TradePlatform-redis
-    # command : --port 6379
     networks: 
         TradePlatform_Network:
     ports:

@@ -11,9 +11,11 @@ const envSchema = zod_1.z.object({
     PORT: zod_1.z.string().transform((val) => parseInt(val, 10)).default("2000"),
     NODE_ENV: zod_1.z.enum(["development", "production", "test"]).default("development"),
     MYSQLHOST: zod_1.z.string(),
+    MYSQLHOST_TEST: zod_1.z.string(),
     MYSQLUID: zod_1.z.string(),
     MYSQLPASSWORD: zod_1.z.string(),
-    MYSQLPORT: zod_1.z.string().transform((val) => parseInt(val, 10))
+    MYSQLPORT: zod_1.z.string().transform((val) => parseInt(val, 10)),
+    MYSQLPORT_TEST: zod_1.z.string().transform((val) => parseInt(val, 10))
 });
 // 驗證並解析環境變數
 const env = envSchema.parse(process.env);

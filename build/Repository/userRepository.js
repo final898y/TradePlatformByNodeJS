@@ -12,27 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const userService_1 = __importDefault(require("../Services/userService"));
-const getAllUsers = (req, res) => {
-    res.send("Return all users");
-};
-const GetUserDetail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const UID = req.query.uid;
-    try {
-        const results = yield userService_1.default.GetUserDetail(UID);
-        if (results.length === 0) {
-            res.status(404).send("User not found");
-            return;
-        }
-        res.json(results[0]);
-    }
-    catch (error) {
-        res.status(500).send("Error fetching user");
-        console.error(error);
-    }
+const promise_1 = __importDefault(require("mysql2/promise"));
+const env_1 = __importDefault(require("../src/env"));
+const pool = promise_1.default.createPool({
+    host: env_1.default.MYSQLHOST_TEST,
+    user: env_1.default.MYSQLUID,
+    password: env_1.default.MYSQLPASSWORD,
+    port: env_1.default.MYSQLPORT_TEST,
+    database: "TradePlatform"
 });
-// 將所有方法打包成一個默認導出
+function GetUserDetail(UID) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const [results, fields] = yield pool.query("SELECT * FROM User WHERE UID = ?", [UID]);
+            return results;
+        }
+        catch (error) {
+            throw error;
+        }
+    });
+}
 exports.default = {
-    getAllUsers,
-    GetUserDetail,
+    pool,
+    GetUserDetail
 };

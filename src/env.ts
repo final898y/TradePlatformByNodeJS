@@ -9,9 +9,11 @@ const envSchema = z.object({
   PORT: z.string().transform((val) => parseInt(val, 10)).default("2000"),
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   MYSQLHOST: z.string(),
+  MYSQLHOST_TEST: z.string(),
   MYSQLUID: z.string(),
   MYSQLPASSWORD: z.string(),
-  MYSQLPORT: z.string().transform((val) => parseInt(val, 10))
+  MYSQLPORT: z.string().transform((val) => parseInt(val, 10)),
+  MYSQLPORT_TEST: z.string().transform((val) => parseInt(val, 10))
 });
 
 // 驗證並解析環境變數

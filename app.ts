@@ -1,15 +1,16 @@
 import express from "express";
 import env from "./src/env";
-import indexrouter from "./routers/index"
-import userRouter from "./routers/user"
+import IndexRouter from "./Routers/indexRouter"
+import UserRouter from "./Routers/userRouter"
 
 
 const app = express();
 const port: number = env.PORT;
 
 app.set("view engine", "pug");
-app.use("/", indexrouter);
-app.use("/api", userRouter);
+app.set('views', './views')
+app.use("/", IndexRouter);
+app.use("/api", UserRouter);
 
 
 app.listen(port, () => {
