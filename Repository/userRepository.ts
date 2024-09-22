@@ -19,7 +19,7 @@ async function GetUserDetail(UID: string): Promise<userModel[]> {
   }
 }
 
-export default{
+export {
   pool,
   GetUserDetail
 };

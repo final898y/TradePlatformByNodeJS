@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import UserService from "../Services/userService"
+import * as UserService from "../Services/userService"
 
 const getAllUsers = (req: Request, res: Response): void => {
   res.send("Return all users");
@@ -21,8 +21,8 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// 將所有方法打包成一個默認導出
-export default {
+
+export {
   getAllUsers,
   GetUserDetail,
 };
