@@ -1,7 +1,10 @@
 import express from "express";
 import env from "./src/env";
-import IndexRouter from "./src/Routers/indexRouter"
-import UserRouter from "./src/Routers/userRouter"
+import swaggerUi from 'swagger-ui-express';
+import swaggerDocument from './src/swagger.json';
+
+import IndexRouter from "./src/routers/indexRouter"
+import UserRouter from "./src/routers/userRouter"
 
 
 const app = express();
@@ -14,7 +17,8 @@ app.use(express.json()) // for parsing application/json
 app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 app.use("/", IndexRouter);
-app.use("/user", UserRouter);
+app.use("/users", UserRouter);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 app.listen(port, () => {

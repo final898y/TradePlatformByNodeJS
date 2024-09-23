@@ -3,8 +3,10 @@ Rewrite the exercise.
 ## npm設置
 1. npm install  
 ## DockerCompose設置
-1. npm builddc
-2. npm startdc
+1. npm run builddc  
+>建置Docker Image
+2. npm run startdc  
+>啟動Docker  
 ## 啟動瀏覽器
 http://localhost:13000  
 http://localhost:13000/api/users?uid=UID2024080817555212345679

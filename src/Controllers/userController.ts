@@ -1,5 +1,5 @@
 import express,{ Request, Response } from "express";
-import * as UserService from "../Services/userService";
+import * as UserService from "../services/userService";
 import * as userModel from "../model/userModel";
 
 const getAllUsers = (req: Request, res: Response): void => {
@@ -8,6 +8,10 @@ const getAllUsers = (req: Request, res: Response): void => {
 
 const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
   const UID = req.query.uid as string;
+  if (!UID) {
+    res.status(400).send("UID is required");
+    return;
+  }
   try {
     const results = await UserService.GetUserDetail(UID);
 
@@ -15,7 +19,7 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
       res.status(404).send("User not found");
       return;
     }
-    res.json(results[0]);
+    res.status(200).json(results[0]);
   } catch (error) {
     res.status(500).send("Error fetching user");
     console.error(error);

@@ -1,5 +1,5 @@
 import {RowDataPacket} from "mysql2/promise";
-import * as UserRepository from "../Repository/userRepository"
+import * as UserRepository from "../repositorys/userRepository"
 import {User} from "../model/userModel";
 
 

@@ -1,0 +1,144 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "User API",
+      "description": "Simple RESTful API in Node.js with TypeScript",
+      "version": "0.0.1"
+    },
+    "servers": [
+      {
+        "url": "http://localhost:3000/",
+        "description": "Local server"
+      }
+    ],
+    "tags":[
+      {
+        "name": "User",
+        "description": "Operations about user"
+      }
+    ],
+    "paths": {
+      "/users/search": {
+        "get": {
+          "tags":["User"],
+          "summary": "GetUserDetail",
+          "description": "Return User Detail By UID.",
+          "parameters": [
+            {
+              "name": "uid",
+              "in": "query",
+              "required": true,
+              "description": "User UID to fetch details.",
+              "schema": {
+                "type": "string",
+                "default": "UID2024080817555212345679"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User details fetched successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "UID is required",
+              "content": {
+                "text/plain": {
+                  "example": "UID is required"
+                }
+              }
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "text/plain": {
+                  "example": "User not found"
+                }
+              }
+            },
+            "500": {
+              "description": "Error fetching user",
+              "content": {
+                "text/plain": {
+                  "example": "Error fetching user"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "UID": {
+              "type": "string",
+              "example": "123456"
+            },
+            "Name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "MobilePhone": {
+              "type": "string",
+              "example": "0912345678",
+              "description": "手機為必填欄位"
+            },
+            "Email": {
+              "type": "string",
+              "format": "email",
+              "example": "example@example.com",
+              "description": "Email為必填欄位"
+            },
+            "Password": {
+              "type": "string",
+              "minLength": 8,
+              "example": "mypassword",
+              "description": "密碼為必填欄位，且不可小於 8 個字元"
+            },
+            "UserStatus": {
+              "type": "string",
+              "enum": ["Inactive", "Active", "Suspended"],
+              "example": "Active"
+            },
+            "Birthday": {
+              "type": "string",
+              "format": "date",
+              "example": "1990-01-01"
+            },
+            "Address": {
+              "type": "string",
+              "example": "123 Main St",
+              "nullable": true
+            },
+            "StoreName": {
+              "type": "string",
+              "example": "My Store",
+              "nullable": true
+            },
+            "CreateDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z",
+              "nullable": true
+            },
+            "UpdateDate": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-09-24T12:34:56Z",
+              "nullable": true
+            }
+          },
+          "required": ["UID", "Name", "MobilePhone", "Email", "Password", "UserStatus", "Birthday"]
+        }
+      }
+    }
+  }
