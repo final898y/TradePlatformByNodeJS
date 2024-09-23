@@ -108,7 +108,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/**/*","Routers/**/*",
+    "src/**/*","src/Routers/**/*",
     "app.ts"  
-, "Repository/userRepository.ts"  ]
+, "src/Repository/userRepository.ts"  ]
 }

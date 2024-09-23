@@ -1,12 +1,10 @@
 # TradePlatform
 Rewrite the exercise.
-## yarm設置
-1. corepack enable  
-2. yarn set version stable  
-3. yarn install
+## npm設置
+1. npm install  
 ## DockerCompose設置
-1. yarn builddc
-2. yarn startdc
+1. npm builddc
+2. npm startdc
 ## 啟動瀏覽器
 http://localhost:13000  
 http://localhost:13000/api/users?uid=UID2024080817555212345679

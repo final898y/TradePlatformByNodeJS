@@ -1,5 +1,6 @@
-import { Request, Response } from "express";
-import * as UserService from "../Services/userService"
+import express,{ Request, Response } from "express";
+import * as UserService from "../Services/userService";
+import * as userModel from "../model/userModel";
 
 const getAllUsers = (req: Request, res: Response): void => {
   res.send("Return all users");
@@ -21,8 +22,18 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const Register = async (req: Request, res: Response): Promise<void> => {
+  const postdata = await userModel.UserSchema.safeParseAsync(req.body);
+  if (!postdata.success) {
+    res.send(postdata.error) ;
+  } else {
+    const registerData : userModel.User = postdata.data
+    const results = await UserService.Register(registerData);
+  }
+};
 
 export {
   getAllUsers,
   GetUserDetail,
+  Register
 };
