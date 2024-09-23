@@ -1,8 +1,9 @@
 # TradePlatform
 Rewrite the exercise.
-## npm設置
+## 設置
 1. npm install  
-2. npm run start  
+2. npm run startmysql  
+3. npm run start  
 ## 啟動瀏覽器(swagger)
 http://localhost:3000/api-docs/
 
