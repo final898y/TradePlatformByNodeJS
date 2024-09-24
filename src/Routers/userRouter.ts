@@ -4,6 +4,7 @@ import * as UserController from "../controllers/userController";
 const router = express.Router();
 
 router.get("/search", UserController.GetUserDetail);
+router.get("/list", UserController.GetAllUsers);
 router.get("/register", (req, res) => {
     res.render("register");
   });

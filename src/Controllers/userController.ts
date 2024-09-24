@@ -2,8 +2,19 @@ import express,{ Request, Response } from "express";
 import * as UserService from "../services/userService";
 import * as userModel from "../model/userModel";
 
-const getAllUsers = (req: Request, res: Response): void => {
-  res.send("Return all users");
+const GetAllUsers = async(req: Request, res: Response): Promise<void> => {
+  try {
+    const userDetailArray = await UserService.GetAllUsers();
+
+    if ((userDetailArray as object[]).length === 0) {
+      res.status(404).send("User not found");
+      return;
+    }
+    res.status(200).json(userDetailArray);
+  } catch (error) {
+    res.status(500).send("Error fetching user");
+    console.error(error);
+  }
 };
 
 const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
@@ -13,13 +24,13 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
     return;
   }
   try {
-    const results = await UserService.GetUserDetail(UID);
+    const userDetailObject = await UserService.GetUserDetail(UID);
 
-    if ((results as any[]).length === 0) {
+    if (userDetailObject === null) {
       res.status(404).send("User not found");
       return;
     }
-    res.status(200).json(results[0]);
+    res.status(200).json(userDetailObject);
   } catch (error) {
     res.status(500).send("Error fetching user");
     console.error(error);
@@ -37,7 +48,7 @@ const Register = async (req: Request, res: Response): Promise<void> => {
 };
 
 export {
-  getAllUsers,
+  GetAllUsers,
   GetUserDetail,
   Register
 };

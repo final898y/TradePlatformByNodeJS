@@ -72,6 +72,44 @@
             }
           }
         }
+      },
+      "/users/list": {
+        "get": {
+          "tags":["User"],
+          "summary": "GetAllUsers",
+          "description": "Return All User Detail.",
+          "responses": {
+            "200": {
+              "description": "A list of user details",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/User"
+                  }
+                }
+                }
+              }
+            },
+            "404": {
+              "description": "User not found",
+              "content": {
+                "text/plain": {
+                  "example": "User not found"
+                }
+              }
+            },
+            "500": {
+              "description": "Error fetching user",
+              "content": {
+                "text/plain": {
+                  "example": "Error fetching user"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {

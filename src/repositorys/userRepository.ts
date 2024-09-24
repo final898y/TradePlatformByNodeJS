@@ -11,19 +11,30 @@ const pool = mysql.createPool({
   database: "TradePlatform"
 });
 
-async function GetUserDetail(UID: string): Promise<RowDataPacket[]> {
+async function GetAllUsers(): Promise<object[]> {
   try {
-    const [results, fields] = await pool.query<RowDataPacket[]>("SELECT * FROM User WHERE UID = ?", [UID]);
-    return results;
+    const [results, fields] = await pool.query<RowDataPacket[]>("SELECT * FROM User");
+    const userDetailArray:object[] = results;
+    return userDetailArray;
   } catch (error) {
     throw error;
   }
 }
 
-async function Register(RegisterData: User): Promise<RowDataPacket[]> {
+async function GetUserDetail(UID: string): Promise<object> {
+  try {
+    const [results, fields] = await pool.query<RowDataPacket[]>("SELECT * FROM User WHERE UID = ?", [UID]);
+    const userDetailObject: object  =  results[0];
+    return userDetailObject;
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function Register(RegisterData: User): Promise<string> {
   try {
     const [results, fields] = await pool.query<RowDataPacket[]>("SELECT * FROM User WHERE UID = ?", [RegisterData.UID]);
-    return results;
+    return "";
   } catch (error) {
     throw error;
   }
@@ -31,6 +42,7 @@ async function Register(RegisterData: User): Promise<RowDataPacket[]> {
 
 export {
   pool,
+  GetAllUsers,
   GetUserDetail,
   Register
 };
