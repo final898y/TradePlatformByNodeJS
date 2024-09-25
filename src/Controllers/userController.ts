@@ -1,4 +1,4 @@
-import express,{ Request, Response } from "express";
+import { Request, Response } from "express";
 import * as UserService from "../services/userService";
 import * as userModel from "../model/userModel";
 
@@ -6,7 +6,7 @@ const GetAllUsers = async(req: Request, res: Response): Promise<void> => {
   try {
     const userDetailArray = await UserService.GetAllUsers();
 
-    if ((userDetailArray as object[]).length === 0) {
+    if (userDetailArray.length === 0) {
       res.status(404).send("User not found");
       return;
     }

@@ -5,6 +5,7 @@ import swaggerDocument from './src/swagger.json';
 
 import IndexRouter from "./src/routers/indexRouter"
 import UserRouter from "./src/routers/userRouter"
+import TestRouter from "./src/routers/testRouter"
 
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.urlencoded({ extended: true })) // for parsing application/x-www
 
 app.use("/", IndexRouter);
 app.use("/users", UserRouter);
+app.use("/tests", TestRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 

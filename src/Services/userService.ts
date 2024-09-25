@@ -1,6 +1,7 @@
 import * as UserRepository from "../repositorys/userRepository"
 import {User} from "../model/userModel";
 
+
 async function GetAllUsers(): Promise<object[]> {
   try {
      return UserRepository.GetAllUsers()
