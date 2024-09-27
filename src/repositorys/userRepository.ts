@@ -1,5 +1,7 @@
 import {User} from "../model/userModel";
-import {SelectQuery} from "../helpers/mysqlHelper";
+import {SelectQuery,InsertQuery} from "../helpers/mysqlHelper";
+import {ValidateRegisterData} from "../utility/validateData";
+
 
 async function GetAllUsers(): Promise<object[]> {
   try {
@@ -23,11 +25,13 @@ async function GetUserDetail(UID: string): Promise<object> {
 
 async function Register(RegisterData: User): Promise<string> {
   try {
-    //const [results, fields] = await pool.query<RowDataPacket[]>("SELECT * FROM User WHERE UID = ?", [RegisterData.UID]);
-    return "";
-  } catch (error) {
-    throw error;
-  }
+    const filterField = ["UID", "Name", "MobilePhone", "Email", "Password", "Birthday", "Address", "StoreName"];
+    const filterValue = [RegisterData.UID, RegisterData.Name, RegisterData.MobilePhone,RegisterData.Email,RegisterData.Password,RegisterData.Birthday,RegisterData.Address,RegisterData.StoreName]
+    const result = await InsertQuery("User",filterField,filterValue);
+    return ("註冊成功");
+    } catch (error) {
+      throw error;
+    }
 }
 
 export {

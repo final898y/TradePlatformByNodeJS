@@ -110,6 +110,51 @@
             }
           }
         }
+      },
+      "/users/register": {
+        "post": {
+          "tags": ["User"],
+          "summary": "Register a new user",
+          "description": "Register a new user with their details",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRegister"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "User registered successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid registration data",
+              "content": {
+                "text/plain": {
+                  "example": "Validation error message"
+                }
+              }
+            },
+            "500": {
+              "description": "Error registering user",
+              "content": {
+                "text/plain": {
+                  "example": "Error registering user"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "components": {
@@ -176,6 +221,53 @@
             }
           },
           "required": ["UID", "Name", "MobilePhone", "Email", "Password", "UserStatus", "Birthday"]
+        },
+        "UserRegister": {
+          "type": "object",
+          "properties": {
+            "Name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "MobilePhone": {
+              "type": "string",
+              "example": "0912345678",
+              "description": "手機為必填欄位"
+            },
+            "Email": {
+              "type": "string",
+              "format": "email",
+              "example": "example@example.com",
+              "description": "Email為必填欄位"
+            },
+            "Password": {
+              "type": "string",
+              "minLength": 8,
+              "example": "mypassword",
+              "description": "密碼為必填欄位，且不可小於 8 個字元"
+            },
+            "UserStatus": {
+              "type": "string",
+              "enum": ["Inactive", "Active", "Suspended"],
+              "example": "Active"
+            },
+            "Birthday": {
+              "type": "string",
+              "format": "date",
+              "example": "1990-01-01"
+            },
+            "Address": {
+              "type": "string",
+              "example": "123 Main St",
+              "nullable": true
+            },
+            "StoreName": {
+              "type": "string",
+              "example": "My Store",
+              "nullable": true
+            }
+          },
+          "required": ["Name", "MobilePhone", "Email", "Password", "UserStatus", "Birthday"]
         }
       }
     }

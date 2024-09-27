@@ -17,7 +17,7 @@ async function GetUserDetail(UID: string): Promise<object> {
       throw error;
     }
 }
-async function Register(RegisterData: User): Promise<string> {
+async function Register(RegisterData :User): Promise<string> {
   try {
      return UserRepository.Register(RegisterData)
   } catch (error) {

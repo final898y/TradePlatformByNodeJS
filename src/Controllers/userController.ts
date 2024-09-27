@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
+
 import * as UserService from "../services/userService";
-import * as userModel from "../model/userModel";
+import {ValidateRegisterData} from "../utility/validateData";
+import generateID from "../utility/IDGenerater";
+
 
 const GetAllUsers = async(req: Request, res: Response): Promise<void> => {
   try {
@@ -38,12 +41,26 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
 };
 
 const Register = async (req: Request, res: Response): Promise<void> => {
-  const postdata = await userModel.UserSchema.safeParseAsync(req.body);
-  if (!postdata.success) {
-    res.send(postdata.error) ;
-  } else {
-    const registerData : userModel.User = postdata.data
-    const results = await UserService.Register(registerData);
+  const validateResult = await ValidateRegisterData(req);
+  if (typeof validateResult ==="string") 
+  {
+    res.status(400).json(validateResult);
+    
+  } 
+  else 
+  {
+    try 
+    {
+      const uid = generateID("UID");
+      const addUIDtovalidateResult = { UID: uid, ...validateResult };
+      const result = await UserService.Register(addUIDtovalidateResult);
+      res.status(200).json(result);
+    } 
+    catch (error) 
+    {
+      console.error(error);
+      res.status(500).json({message: "Error registering user", error});
+    }
   }
 };
 
