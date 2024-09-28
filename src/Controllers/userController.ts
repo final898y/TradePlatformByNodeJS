@@ -28,7 +28,7 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
   try {
     const userDetailObject = await UserService.GetUserDetail(UID);
 
-    if (userDetailObject === null) {
+    if (userDetailObject === undefined) {
       res.status(404).send('User not found');
       return;
     }

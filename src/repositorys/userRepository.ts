@@ -1,6 +1,5 @@
 import { User } from '../model/userModel';
 import { SelectQuery, InsertQuery } from '../helpers/mysqlHelper';
-import { ValidateRegisterData } from '../utility/validateData';
 import { Hashdata } from '../utility/hashData';
 
 
@@ -53,5 +52,6 @@ async function Register(RegisterData: User): Promise<string> {
     throw error;
   }
 }
+
 
 export { GetAllUsers, GetUserDetail, Register };
