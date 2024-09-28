@@ -1,6 +1,8 @@
 import { User } from '../model/userModel';
 import { SelectQuery, InsertQuery } from '../helpers/mysqlHelper';
 import { ValidateRegisterData } from '../utility/validateData';
+import { Hashdata } from '../utility/hashData';
+
 
 async function GetAllUsers(): Promise<object[]> {
   try {
@@ -34,12 +36,13 @@ async function Register(RegisterData: User): Promise<string> {
       'Address',
       'StoreName',
     ];
+    const hashedPassword = await Hashdata(RegisterData.Password);
     const filterValue = [
       RegisterData.UID,
       RegisterData.Name,
       RegisterData.MobilePhone,
       RegisterData.Email,
-      RegisterData.Password,
+      hashedPassword,
       RegisterData.Birthday,
       RegisterData.Address,
       RegisterData.StoreName,

@@ -9,4 +9,15 @@ async function Hashdata(password: string): Promise<string> {
   }
 }
 
-//async function validateHash(hashdata: string):
+async function ValidateHash(password: string,hashdata: string):Promise<boolean|string>{
+  try{
+    const matchResult = await bcrypt.compare(password, hashdata);
+    return matchResult
+  } catch (err){
+    return '發生錯誤: '+err;
+  }
+}
+export{
+  Hashdata,
+  ValidateHash
+}
