@@ -12,9 +12,8 @@ function BuildMysqlStatementSelect(tableName: string, filterField?: string[]): s
   if (filterField.length === 1) {
     return baseStatement + ' WHERE ' + filterField[0] + ' = ?';
   }
-  let filterStatement = filterField.join(' = ? & ');
-  filterStatement.slice(0, -3); //刪掉最後的 &
-  return baseStatement + ' WHERE ' + filterStatement;
+  let filterStatement = filterField.join(' = ? AND ');
+  return baseStatement + ' WHERE ' + filterStatement+' = ?';
 }
 
 function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): string {
@@ -26,7 +25,6 @@ function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): s
     return baseStatement + filterField[0] + ') VALUES (?)';
   }
   let filterStatement = filterField.join(', ');
-  filterStatement.slice(0, -2); //刪掉最後的,
   const filledArray = Array(filterField.length).fill('?');
   const questionMark = filledArray.join(', ');
   return baseStatement + filterStatement + ') VALUES (' + questionMark + ')';
