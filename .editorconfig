@@ -1,10 +1,30 @@
+# 告訴編輯器這是根目錄的 .editorconfig 文件
 root = true
 
+# 全局設置適用於所有文件
 [*]
-end_of_line = lf
-insert_final_newline = true
+charset = utf-8                # 使用 UTF-8 編碼
+indent_style = space            # 使用空格進行縮進
+indent_size = 2                 # 每次縮進使用 2 個空格
+end_of_line = lf                # 使用 LF 來作為換行符
+insert_final_newline = true     # 文件最後保留一個新行
+trim_trailing_whitespace = true # 自動移除行末多餘的空白字符
 
-[*.{js,json,yml,ts}]
-charset = utf-8
-indent_style = space
-indent_size = 2
+# 針對 TypeScript 和 JavaScript 文件的設置
+[*.{ts,tsx,js,jsx}]
+indent_size = 2                 # TypeScript 和 JavaScript 文件使用 2 個空格縮進
+quote_type = single             # 使用單引號
+max_line_length = 120           # 每行最多 120 個字符
+
+# 針對 JSON 文件的設置
+[*.json]
+indent_size = 2                 # JSON 文件使用 2 個空格縮進
+quote_type = double             # JSON 標準使用雙引號
+
+# 針對 YAML 文件的設置
+[*.yml, *.yaml]
+indent_size = 2                 # YAML 文件使用 2 個空格縮進
+
+# Markdown 文件的設置
+[*.md]
+trim_trailing_whitespace = false # 保留 Markdown 行尾的空白符
