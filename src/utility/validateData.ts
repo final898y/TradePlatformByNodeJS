@@ -1,8 +1,17 @@
-import * as userModel from '../model/userModel';
+import {User,UserSchema} from '../model/userModel';
 import { Request } from 'express';
-import { z, ZodError, SafeParseSuccess } from 'zod';
+import { z, ZodError } from 'zod';
 
-const ValidateRegisterUserSchema = userModel.UserSchema.pick({
+async function ValidateUserrData(data: object): Promise<string | User> {
+  const validateResult = await UserSchema.safeParseAsync(data);
+  if (validateResult.success === false) {
+    return ZodErrorHandling(validateResult.error);
+  } else {
+    return validateResult.data;
+  }
+}
+
+const ValidateRegisterUserSchema = UserSchema.pick({
   Name: true,
   MobilePhone: true,
   Email: true,
@@ -38,4 +47,8 @@ function ZodErrorHandling(zoderror: ZodError<ValidateRegister>): string {
   const zodErrorString = zodErrorFormatArray.join('、');
   return '輸入資料有下列錯誤，請進行修正：「' + zodErrorString + '」';
 }
-export { ValidateRegisterData, ZodErrorHandling };
+export {
+  ValidateRegisterData,
+  ZodErrorHandling,
+  ValidateUserrData
+};

@@ -2,7 +2,7 @@ import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import env from '../env';
 import express, { Request, Response } from 'express';
 import { SelectQuery, InsertQuery } from '../helpers/mysqlHelper';
-import { ValidateRegisterData, ZodErrorHandling } from '../utility/validateData';
+import { ValidateRegisterData, ValidateUserrData } from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { z } from 'zod';
 
@@ -43,7 +43,13 @@ const testMysqlSelect = async (req: Request, res: Response): Promise<void> => {
       ['MobilePhone', 'Email'],
       ['0912345678', 'final978@gmail.com'],
     );
-    res.status(200).json(results);
+    const a = results[0];
+    const validateResult = await ValidateUserrData(a)
+    if (typeof validateResult === 'string') {
+      res.status(400).json(validateResult);
+    } else {
+      res.status(200).json(validateResult.Name);
+    }
   } catch (error) {
     throw error;
   }
