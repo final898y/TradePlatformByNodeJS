@@ -25,9 +25,20 @@ function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): s
     return baseStatement + filterField[0] + ') VALUES (?)';
   }
   let filterStatement = filterField.join(', ');
-  const filledArray = Array(filterField.length).fill('?');
-  const questionMark = filledArray.join(', ');
-  return baseStatement + filterStatement + ') VALUES (' + questionMark + ')';
+  const questionMarkArray = Array(filterField.length).fill('?');
+  const questionMarkString = questionMarkArray.join(', ');
+  return baseStatement + filterStatement + ') VALUES (' + questionMarkString + ')';
+}
+
+function BuildMysqlStatementUpdate(tableName: string, updateField: string[], filterField: string): string {
+  const baseStatement = `UPDATE ${tableName} SET `;
+  if (updateField.length === 1) {
+    return baseStatement + updateField[0] + '= ? WHERE '+ filterField +'= ?';
+  }
+  else {
+    let updateStatement = updateField.join('= ?, ');
+    return baseStatement + updateStatement + '= ? ' + 'WHERE '+ filterField +'= ?';
+  }
 }
 
 const pool = mysql.createPool({
@@ -78,4 +89,31 @@ async function InsertQuery(
   }
 }
 
-export { SelectQuery, InsertQuery };
+async function UpdateQuery(
+  tableName: string,
+  updateField: string[],
+  updateAndFilterValue: any[],
+  filterField: string,
+): Promise<ResultSetHeader> {
+  try {
+    const sqlStatement = BuildMysqlStatementUpdate(tableName,updateField,filterField);
+    const [ResultSetHeader, FieldPacket] = await pool.query<ResultSetHeader>(
+      sqlStatement,
+      updateAndFilterValue,
+    );
+    //   ResultSetHeader{
+    //     "fieldCount": 0,
+    //     "affectedRows": 1,
+    //     "insertId": 0,
+    //     "info": "",
+    //     "serverStatus": 2,
+    //     "warningStatus": 0,
+    //     "changedRows": 0
+    // },
+    return ResultSetHeader;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { SelectQuery, InsertQuery, UpdateQuery };

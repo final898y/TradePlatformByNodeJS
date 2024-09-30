@@ -1,4 +1,4 @@
-import {User,UserSchema} from '../model/userModel';
+import { User, UserSchema } from '../model/userModel';
 import { Request } from 'express';
 import { z, ZodError } from 'zod';
 
@@ -32,6 +32,19 @@ async function ValidateRegisterData(req: Request): Promise<string | ValidateRegi
   }
 }
 
+
+const ValidateUserSchemaOptional = UserSchema.partial();
+type ValidateUserPartial = z.infer<typeof ValidateUserSchemaOptional>;
+
+async function ValidateUpdateData(req: Request): Promise<string | ValidateUserPartial> {
+  const validateResult = await ValidateUserSchemaOptional.safeParseAsync(req.body);
+  if (validateResult.success === false) {
+    return ZodErrorHandling(validateResult.error);
+  } else {
+    return validateResult.data;
+  }
+}
+
 function ZodErrorHandling(zoderror: ZodError<ValidateRegister>): string {
   const zodErrorFormat = zoderror.format();
   const zodErrorFormatArray = [
@@ -49,6 +62,8 @@ function ZodErrorHandling(zoderror: ZodError<ValidateRegister>): string {
 }
 export {
   ValidateRegisterData,
+  ValidateUpdateData,
   ZodErrorHandling,
-  ValidateUserrData
+  ValidateUserrData,
+  ValidateUserPartial
 };

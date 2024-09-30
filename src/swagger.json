@@ -155,6 +155,49 @@
           }
         }
       }
+    },
+    "/users/edit": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Edit a new user",
+        "description": "Edit user details",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserEdit"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "更新資料成功",
+            "content": {
+              "text/plain": {
+                "example": "更新資料成功"
+              }
+            }
+          },
+          "400": {
+            "description": "更新的資料格式有誤",
+            "content": {
+              "text/plain": {
+                "example": "Validation error message"
+              }
+            }
+          },
+          "500": {
+            "description": "Error editing user",
+            "content": {
+              "text/plain": {
+                "example": "Error editing user"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -268,6 +311,68 @@
           }
         },
         "required": ["Name", "MobilePhone", "Email", "Password", "UserStatus", "Birthday"]
+      },
+      "UserEdit": {
+        "type": "object",
+        "properties": {
+          "UID": {
+            "type": "string",
+            "example": "123456"
+          },
+          "Name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "MobilePhone": {
+            "type": "string",
+            "example": "0912345678",
+            "description": "手機為必填欄位"
+          },
+          "Email": {
+            "type": "string",
+            "format": "email",
+            "example": "example@example.com",
+            "description": "Email為必填欄位"
+          },
+          "Password": {
+            "type": "string",
+            "minLength": 8,
+            "example": "mypassword",
+            "description": "密碼為必填欄位，且不可小於 8 個字元"
+          },
+          "UserStatus": {
+            "type": "string",
+            "enum": ["Inactive", "Active", "Suspended"],
+            "example": "Active"
+          },
+          "Birthday": {
+            "type": "string",
+            "format": "date",
+            "example": "1990-01-01"
+          },
+          "Address": {
+            "type": "string",
+            "example": "123 Main St",
+            "nullable": true
+          },
+          "StoreName": {
+            "type": "string",
+            "example": "My Store",
+            "nullable": true
+          },
+          "CreateDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-01-01T00:00:00Z",
+            "nullable": true
+          },
+          "UpdateDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2024-09-24T12:34:56Z",
+            "nullable": true
+          }
+        }
       }
     }
   }

@@ -1,5 +1,6 @@
 import * as UserRepository from '../repositorys/userRepository';
 import { User } from '../model/userModel';
+import { ValidateUserPartial } from '../utility/validateData';
 
 async function GetAllUsers(): Promise<object[]> {
   try {
@@ -24,4 +25,12 @@ async function Register(RegisterData: User): Promise<string> {
   }
 }
 
-export { GetAllUsers, GetUserDetail, Register };
+async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<string> {
+  try {
+    return UserRepository.EditUser(UpdateData, UID);
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { GetAllUsers, GetUserDetail, Register, EditUser };

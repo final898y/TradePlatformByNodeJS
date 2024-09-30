@@ -1,6 +1,7 @@
 import { User } from '../model/userModel';
-import { SelectQuery, InsertQuery } from '../helpers/mysqlHelper';
+import { SelectQuery, InsertQuery, UpdateQuery} from '../helpers/mysqlHelper';
 import { Hashdata } from '../utility/hashData';
+import { ValidateUserPartial } from '../utility/validateData';
 
 
 async function GetAllUsers(): Promise<object[]> {
@@ -46,12 +47,33 @@ async function Register(RegisterData: User): Promise<string> {
       RegisterData.Address,
       RegisterData.StoreName,
     ];
-    const result = await InsertQuery('User', filterField, filterValue);
-    return '註冊成功';
+    const results = await InsertQuery('User', filterField, filterValue);
+    if(results.affectedRows===1){
+      return '註冊成功';
+    }
+    else return '註冊失敗';
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<string> {
+  try {
+    const updateField:string[] = (Object.keys(UpdateData) as (keyof typeof UpdateData)[])
+    .filter(key => UpdateData[key] !== undefined);
+    const updateAndFilterValue = [UpdateData.Name, UpdateData.MobilePhone, UpdateData.Email,
+      UpdateData.Birthday, UpdateData.Address,UpdateData.StoreName, UID].filter(value => value !== undefined);
+
+    const results = await UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
+    if(results.affectedRows > 0){
+      return '更新資料成功';
+    }
+    else return '更新資料失敗';
   } catch (error) {
     throw error;
   }
 }
 
 
-export { GetAllUsers, GetUserDetail, Register };
+
+export { GetAllUsers, GetUserDetail, Register, EditUser };

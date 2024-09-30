@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
 import * as UserService from '../services/userService';
-import { ValidateRegisterData } from '../utility/validateData';
+import { ValidateRegisterData,ValidateUpdateData } from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 
 const GetAllUsers = async (req: Request, res: Response): Promise<void> => {
@@ -56,4 +56,20 @@ const Register = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export { GetAllUsers, GetUserDetail, Register };
+const EditUser = async (req: Request, res: Response): Promise<void> => {
+  const UID = req.query.uid as string;
+  const validateResult = await ValidateUpdateData(req);
+  if (typeof validateResult === 'string') {
+    res.status(400).json(validateResult);
+  } else {
+    try {
+      const result = await UserService.EditUser(validateResult,UID);
+      res.status(200).json(result);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Error editing user', error });
+    }
+  }
+};
+
+export { GetAllUsers, GetUserDetail, Register, EditUser };

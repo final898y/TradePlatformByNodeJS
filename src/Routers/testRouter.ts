@@ -1,8 +1,8 @@
 import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import env from '../env';
 import express, { Request, Response } from 'express';
-import { SelectQuery, InsertQuery } from '../helpers/mysqlHelper';
-import { ValidateRegisterData, ValidateUserrData } from '../utility/validateData';
+import { SelectQuery, InsertQuery,UpdateQuery } from '../helpers/mysqlHelper';
+import { ValidateRegisterData, ValidateUserrData,ValidateUpdateData} from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { z } from 'zod';
 
@@ -104,10 +104,45 @@ const testMysqlInsert = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+const testMysqlUpdate = async (req: Request, res: Response): Promise<void> => {
+  const validateResult = await ValidateUpdateData(req);
+  if (typeof validateResult === 'string') {
+    res.status(400).json(validateResult);
+  } else {
+    try {
+      const updateField = ['Name', 'MobilePhone','Email', 'BirthDay', 'Address', 'StoreName']
+
+      const uid = 'UID2024080817555212345678';
+      const updateAndFilterValue = [
+        validateResult.Name,
+        validateResult.MobilePhone,
+        validateResult.Email,
+        validateResult.Birthday,
+        validateResult.Address,
+        validateResult.StoreName,
+        uid
+      ];
+      const definedProperties:string[] = (Object.keys(validateResult) as (keyof typeof validateResult)[])
+      .filter(key => validateResult[key] !== undefined);
+      res.status(200).json(definedProperties);
+      // const results = await UpdateQuery('User', updateField, updateAndFilterValue,'UID');
+      // if (results.affectedRows === 1) {
+      //   res.status(200).json('成功');
+      // }
+      // else{
+      //   res.status(400).json(results)
+      // }
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
 const router = express.Router();
 router.get('/selectall', testMysqlSelectAll);
 router.get('/select', testMysqlSelect);
-router.get('/insert', testMysqlInsert);
+router.post('/insert', testMysqlInsert);
 router.get('/zod', testZOD);
+router.put('/edit', testMysqlUpdate);
 
 export default router;
