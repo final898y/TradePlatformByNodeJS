@@ -12,7 +12,7 @@ async function GetAllUsers(): Promise<object[]> {
   } catch (error) {
     throw error;
   }
-}
+};
 
 async function GetUserDetail(UID: string): Promise<object> {
   try {
@@ -22,7 +22,7 @@ async function GetUserDetail(UID: string): Promise<object> {
   } catch (error) {
     throw error;
   }
-}
+};
 
 async function Register(RegisterData: User): Promise<string> {
   try {
@@ -55,7 +55,7 @@ async function Register(RegisterData: User): Promise<string> {
   } catch (error) {
     throw error;
   }
-}
+};
 
 async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<string> {
   try {
@@ -72,8 +72,21 @@ async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<s
   } catch (error) {
     throw error;
   }
-}
+};
+
+async function Login(MobilePhone: string,Password: string): Promise<object[]> {
+  try {
+    const results = await SelectQuery('User', ['MobilePhone'], [MobilePhone]);
+    return results;
+    } catch (error) {
+      throw error;
+    }
+};
 
 
 
-export { GetAllUsers, GetUserDetail, Register, EditUser };
+
+export {
+  GetAllUsers, GetUserDetail, Register,
+  EditUser, Login
+};

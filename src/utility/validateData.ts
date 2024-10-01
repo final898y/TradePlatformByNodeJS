@@ -2,7 +2,7 @@ import { User, UserSchema } from '../model/userModel';
 import { Request } from 'express';
 import { z, ZodError } from 'zod';
 
-async function ValidateUserrData(data: object): Promise<string | User> {
+async function ValidateUserData(data: object): Promise<string | User> {
   const validateResult = await UserSchema.safeParseAsync(data);
   if (validateResult.success === false) {
     return ZodErrorHandling(validateResult.error);
@@ -64,6 +64,6 @@ export {
   ValidateRegisterData,
   ValidateUpdateData,
   ZodErrorHandling,
-  ValidateUserrData,
+  ValidateUserData,
   ValidateUserPartial
 };

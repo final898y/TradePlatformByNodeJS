@@ -198,6 +198,57 @@
           }
         }
       }
+    },
+    "/users/login": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Login",
+        "description": "Login by MobilePhone",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserLogin"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "登入成功",
+            "content": {
+              "text/plain": {
+                "example": "登入成功"
+              }
+            }
+          },
+          "400": {
+            "description": "輸入資料有缺漏",
+            "content": {
+              "text/plain": {
+                "example": "輸入資料有缺漏"
+              }
+            }
+          },
+          "401": {
+            "description": "輸入資料錯誤",
+            "content": {
+              "text/plain": {
+                "example": "輸入資料錯誤"
+              }
+            }
+          },
+          "500": {
+            "description": "連線錯誤",
+            "content": {
+              "text/plain": {
+                "example": "連線錯誤"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -373,6 +424,24 @@
             "nullable": true
           }
         }
+      },
+
+      "UserLogin": {
+        "type": "object",
+        "properties": {
+          "MobilePhone": {
+            "type": "string",
+            "example": "0912345678",
+            "description": "手機為必填欄位"
+          },
+          "Password": {
+            "type": "string",
+            "minLength": 8,
+            "example": "mypassword",
+            "description": "密碼為必填欄位，且不可小於 8 個字元"
+          }
+        },
+        "required": ["MobilePhone", "Password"]
       }
     }
   }

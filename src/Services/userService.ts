@@ -8,7 +8,7 @@ async function GetAllUsers(): Promise<object[]> {
   } catch (error) {
     throw error;
   }
-}
+};
 
 async function GetUserDetail(UID: string): Promise<object> {
   try {
@@ -16,14 +16,15 @@ async function GetUserDetail(UID: string): Promise<object> {
   } catch (error) {
     throw error;
   }
-}
+};
+
 async function Register(RegisterData: User): Promise<string> {
   try {
     return UserRepository.Register(RegisterData);
   } catch (error) {
     throw error;
   }
-}
+};
 
 async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<string> {
   try {
@@ -31,6 +32,17 @@ async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<s
   } catch (error) {
     throw error;
   }
-}
+};
 
-export { GetAllUsers, GetUserDetail, Register, EditUser };
+async function Login(MobilePhone: string,Password: string): Promise<object[]> {
+  try {
+    return await UserRepository.Login(MobilePhone, Password);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export {
+  GetAllUsers, GetUserDetail, Register,
+  EditUser, Login
+};

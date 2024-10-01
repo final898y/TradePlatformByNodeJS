@@ -9,12 +9,13 @@ async function Hashdata(password: string): Promise<string> {
   }
 }
 
-async function ValidateHash(password: string,hashdata: string):Promise<boolean|string>{
+async function ValidateHash(password: string,hashdata: string):Promise<boolean>{
   try{
     const matchResult = await bcrypt.compare(password, hashdata);
     return matchResult
   } catch (err){
-    return '發生錯誤: '+err;
+    console.log('發生錯誤: '+err);
+    return false;
   }
 }
 export{
