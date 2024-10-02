@@ -141,7 +141,15 @@
             "description": "Invalid registration data",
             "content": {
               "text/plain": {
-                "example": "Validation error message"
+                "example": "Invalid registration data"
+              }
+            }
+          },
+          "422": {
+            "description": "Error registering user",
+            "content": {
+              "text/plain": {
+                "example": "Error registering user"
               }
             }
           },

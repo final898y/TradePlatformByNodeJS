@@ -1,7 +1,9 @@
+import { ResultSetHeader } from 'mysql2/promise';
 import { User } from '../model/userModel';
 import { SelectQuery, InsertQuery, UpdateQuery} from '../helpers/mysqlHelper';
 import { Hashdata } from '../utility/hashData';
 import { ValidateUserPartial } from '../utility/validateData';
+import ItransportResult from '../model/transportModel';
 
 
 async function GetAllUsers(): Promise<object[]> {
@@ -24,7 +26,7 @@ async function GetUserDetail(UID: string): Promise<object> {
   }
 };
 
-async function Register(RegisterData: User): Promise<string> {
+async function Register(RegisterData: User): Promise<ResultSetHeader> {
   try {
     const filterField = [
       'UID',
@@ -47,28 +49,19 @@ async function Register(RegisterData: User): Promise<string> {
       RegisterData.Address,
       RegisterData.StoreName,
     ];
-    const results = await InsertQuery('User', filterField, filterValue);
-    if(results.affectedRows===1){
-      return '註冊成功';
-    }
-    else return '註冊失敗';
+    return InsertQuery('User', filterField, filterValue);
   } catch (error) {
     throw error;
   }
 };
 
-async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<string> {
+async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<ResultSetHeader> {
   try {
     const updateField:string[] = (Object.keys(UpdateData) as (keyof typeof UpdateData)[])
     .filter(key => UpdateData[key] !== undefined);
     const updateAndFilterValue = [UpdateData.Name, UpdateData.MobilePhone, UpdateData.Email,
       UpdateData.Birthday, UpdateData.Address,UpdateData.StoreName, UID].filter(value => value !== undefined);
-
-    const results = await UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
-    if(results.affectedRows > 0){
-      return '更新資料成功';
-    }
-    else return '更新資料失敗';
+    return UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
   } catch (error) {
     throw error;
   }

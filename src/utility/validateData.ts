@@ -36,7 +36,7 @@ async function ValidateRegisterData(req: Request): Promise<string | ValidateRegi
 const ValidateUserSchemaOptional = UserSchema.partial();
 type ValidateUserPartial = z.infer<typeof ValidateUserSchemaOptional>;
 
-async function ValidateUpdateData(req: Request): Promise<string | ValidateUserPartial> {
+async function ValidatePartialUserData(req: Request): Promise<string | ValidateUserPartial> {
   const validateResult = await ValidateUserSchemaOptional.safeParseAsync(req.body);
   if (validateResult.success === false) {
     return ZodErrorHandling(validateResult.error);
@@ -62,7 +62,7 @@ function ZodErrorHandling(zoderror: ZodError<ValidateRegister>): string {
 }
 export {
   ValidateRegisterData,
-  ValidateUpdateData,
+  ValidatePartialUserData,
   ZodErrorHandling,
   ValidateUserData,
   ValidateUserPartial

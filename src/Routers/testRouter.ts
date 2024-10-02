@@ -2,7 +2,7 @@ import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import env from '../env';
 import express, { Request, Response } from 'express';
 import { SelectQuery, InsertQuery,UpdateQuery } from '../helpers/mysqlHelper';
-import { ValidateRegisterData, ValidateUserData,ValidateUpdateData} from '../utility/validateData';
+import { ValidateRegisterData, ValidateUserData,ValidatePartialUserData} from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { z } from 'zod';
 
@@ -105,7 +105,7 @@ const testMysqlInsert = async (req: Request, res: Response): Promise<void> => {
 };
 
 const testMysqlUpdate = async (req: Request, res: Response): Promise<void> => {
-  const validateResult = await ValidateUpdateData(req);
+  const validateResult = await ValidatePartialUserData(req);
   if (typeof validateResult === 'string') {
     res.status(400).json(validateResult);
   } else {
