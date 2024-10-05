@@ -22,6 +22,6 @@ app.use('/tests', TestRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening at http://localhost:${port}`);
   console.log(env.NODE_ENV);
 });

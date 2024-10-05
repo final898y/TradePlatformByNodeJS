@@ -3,7 +3,7 @@ import { z } from 'zod';
 enum userStatusEnum {
   Inactive = 0,
   Active = 1,
-  Suspended = 2
+  Suspended = 2,
 }
 const UserSchema = z.object({
   UID: z.string(),
@@ -64,4 +64,4 @@ type User = z.infer<typeof UserSchema>;
 //   return user;
 // }
 
-export { User,UserSchema };
+export { User, UserSchema };

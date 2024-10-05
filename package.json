@@ -9,7 +9,8 @@
     "builddc": "docker compose build --no-cache --pull",
     "startdc": "docker compose up -d",
     "startdb": "docker compose up -d mysql redis mongo",
-    "startmysql": "docker compose up -d mysql"
+    "startmysql": "docker compose up -d mysql",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

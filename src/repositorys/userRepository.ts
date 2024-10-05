@@ -1,10 +1,8 @@
 import { ResultSetHeader } from 'mysql2/promise';
 import { User } from '../model/userModel';
-import { SelectQuery, InsertQuery, UpdateQuery} from '../helpers/mysqlHelper';
+import { SelectQuery, InsertQuery, UpdateQuery } from '../helpers/mysqlHelper';
 import { Hashdata } from '../utility/hashData';
 import { ValidateUserPartial } from '../utility/validateData';
-import ItransportResult from '../model/transportModel';
-
 
 async function GetAllUsers(): Promise<object[]> {
   try {
@@ -14,7 +12,7 @@ async function GetAllUsers(): Promise<object[]> {
   } catch (error) {
     throw error;
   }
-};
+}
 
 async function GetUserDetail(UID: string): Promise<object> {
   try {
@@ -24,7 +22,7 @@ async function GetUserDetail(UID: string): Promise<object> {
   } catch (error) {
     throw error;
   }
-};
+}
 
 async function Register(RegisterData: User): Promise<ResultSetHeader> {
   try {
@@ -53,33 +51,35 @@ async function Register(RegisterData: User): Promise<ResultSetHeader> {
   } catch (error) {
     throw error;
   }
-};
+}
 
 async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<ResultSetHeader> {
   try {
-    const updateField:string[] = (Object.keys(UpdateData) as (keyof typeof UpdateData)[])
-    .filter(key => UpdateData[key] !== undefined);
-    const updateAndFilterValue = [UpdateData.Name, UpdateData.MobilePhone, UpdateData.Email,
-      UpdateData.Birthday, UpdateData.Address,UpdateData.StoreName, UID].filter(value => value !== undefined);
+    const updateField: string[] = (Object.keys(UpdateData) as (keyof typeof UpdateData)[]).filter(
+      (key) => UpdateData[key] !== undefined,
+    );
+    const updateAndFilterValue = [
+      UpdateData.Name,
+      UpdateData.MobilePhone,
+      UpdateData.Email,
+      UpdateData.Birthday,
+      UpdateData.Address,
+      UpdateData.StoreName,
+      UID,
+    ].filter((value) => value !== undefined);
     return UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
   } catch (error) {
     throw error;
   }
-};
+}
 
-async function Login(MobilePhone: string,Password: string): Promise<object[]> {
+async function Login(MobilePhone: string, Password: string): Promise<object[]> {
   try {
     const results = await SelectQuery('User', ['MobilePhone'], [MobilePhone]);
     return results;
-    } catch (error) {
-      throw error;
-    }
-};
+  } catch (error) {
+    throw error;
+  }
+}
 
-
-
-
-export {
-  GetAllUsers, GetUserDetail, Register,
-  EditUser, Login
-};
+export { GetAllUsers, GetUserDetail, Register, EditUser, Login };

@@ -32,7 +32,6 @@ async function ValidateRegisterData(req: Request): Promise<string | ValidateRegi
   }
 }
 
-
 const ValidateUserSchemaOptional = UserSchema.partial();
 type ValidateUserPartial = z.infer<typeof ValidateUserSchemaOptional>;
 
@@ -65,5 +64,5 @@ export {
   ValidatePartialUserData,
   ZodErrorHandling,
   ValidateUserData,
-  ValidateUserPartial
+  ValidateUserPartial,
 };

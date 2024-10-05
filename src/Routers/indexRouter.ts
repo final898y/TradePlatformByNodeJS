@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Home page route.
 router.get('/', (req, res) => {
-  res.render('index', { title: 'TradePlatform', message: 'Home page!' });
+  res.render('index', { title: 'TradePlatform', message: '首頁' });
 });
 
 // About page route.

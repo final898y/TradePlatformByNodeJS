@@ -13,7 +13,7 @@ function BuildMysqlStatementSelect(tableName: string, filterField?: string[]): s
     return baseStatement + ' WHERE ' + filterField[0] + ' = ?';
   }
   let filterStatement = filterField.join(' = ? AND ');
-  return baseStatement + ' WHERE ' + filterStatement+' = ?';
+  return baseStatement + ' WHERE ' + filterStatement + ' = ?';
 }
 
 function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): string {
@@ -30,14 +30,17 @@ function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): s
   return baseStatement + filterStatement + ') VALUES (' + questionMarkString + ')';
 }
 
-function BuildMysqlStatementUpdate(tableName: string, updateField: string[], filterField: string): string {
+function BuildMysqlStatementUpdate(
+  tableName: string,
+  updateField: string[],
+  filterField: string,
+): string {
   const baseStatement = `UPDATE ${tableName} SET `;
   if (updateField.length === 1) {
-    return baseStatement + updateField[0] + '= ? WHERE '+ filterField +'= ?';
-  }
-  else {
+    return baseStatement + updateField[0] + '= ? WHERE ' + filterField + '= ?';
+  } else {
     let updateStatement = updateField.join('= ?, ');
-    return baseStatement + updateStatement + '= ? ' + 'WHERE '+ filterField +'= ?';
+    return baseStatement + updateStatement + '= ? ' + 'WHERE ' + filterField + '= ?';
   }
 }
 
@@ -96,7 +99,7 @@ async function UpdateQuery(
   filterField: string,
 ): Promise<ResultSetHeader> {
   try {
-    const sqlStatement = BuildMysqlStatementUpdate(tableName,updateField,filterField);
+    const sqlStatement = BuildMysqlStatementUpdate(tableName, updateField, filterField);
     const [ResultSetHeader, FieldPacket] = await pool.query<ResultSetHeader>(
       sqlStatement,
       updateAndFilterValue,

@@ -9,7 +9,7 @@ router.get('/register', (req, res) => {
   res.render('register');
 });
 
-router.post('/register',UserController.Register);
+router.post('/register', UserController.Register);
 router.put('/edit', UserController.EditUser);
 router.get('/login', UserController.Login);
 

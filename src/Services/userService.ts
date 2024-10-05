@@ -6,8 +6,6 @@ import * as ValidateData from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { ValidateHash } from '../utility/hashData';
 
-
-
 async function GetAllUsers(): Promise<ItransportResult> {
   try {
     const userDetailArray = await UserRepository.GetAllUsers();
@@ -16,18 +14,18 @@ async function GetAllUsers(): Promise<ItransportResult> {
         success: false,
         statusCode: 404,
         message: 'User not found.',
-      }as ItransportResult;
+      } as ItransportResult;
     }
     return {
       success: true,
       statusCode: 200,
       message: 'Get the results.',
-      data:userDetailArray
-    }as ItransportResult;
+      data: userDetailArray,
+    } as ItransportResult;
   } catch (error) {
     throw error;
   }
-};
+}
 
 async function GetUserDetail(UID: string): Promise<ItransportResult> {
   if (!UID) {
@@ -35,7 +33,7 @@ async function GetUserDetail(UID: string): Promise<ItransportResult> {
       success: false,
       statusCode: 400,
       message: 'UID is required.',
-    }as ItransportResult;;
+    } as ItransportResult;
   }
   try {
     const userDetailObject = await UserRepository.GetUserDetail(UID);
@@ -47,16 +45,16 @@ async function GetUserDetail(UID: string): Promise<ItransportResult> {
       } as ItransportResult;
     } else {
       return {
-      success: true,
-      statusCode: 200,
-      message: 'Get the user\'s details.',
-      data:userDetailObject,
-    } as ItransportResult;
-  }
+        success: true,
+        statusCode: 200,
+        message: "Get the user's details.",
+        data: userDetailObject,
+      } as ItransportResult;
+    }
   } catch (error) {
     throw error;
   }
-};
+}
 
 async function Register(req: Request): Promise<ItransportResult> {
   const validateResult = await ValidateData.ValidateRegisterData(req);
@@ -67,27 +65,27 @@ async function Register(req: Request): Promise<ItransportResult> {
       message: validateResult,
     } as ItransportResult;
   } else {
-      try {
-        const uid = generateID('UID');
-        const addUIDtovalidateResult = { UID: uid, ...validateResult };
-        const resultSetHeader = await UserRepository.Register(addUIDtovalidateResult);
-        if(resultSetHeader.affectedRows===1){
-          return {
-            success: true,
-            statusCode: 200,
-            message:  '註冊成功',
-          } as ItransportResult;
-        }
-        else return {
-            success: false,
-            statusCode: 422,
-            message:  '註冊失敗',
-          } as ItransportResult;
-      } catch (error) {
-        throw error;
-      }
+    try {
+      const uid = generateID('UID');
+      const addUIDtovalidateResult = { UID: uid, ...validateResult };
+      const resultSetHeader = await UserRepository.Register(addUIDtovalidateResult);
+      if (resultSetHeader.affectedRows === 1) {
+        return {
+          success: true,
+          statusCode: 200,
+          message: '註冊成功',
+        } as ItransportResult;
+      } else
+        return {
+          success: false,
+          statusCode: 422,
+          message: '註冊失敗',
+        } as ItransportResult;
+    } catch (error) {
+      throw error;
     }
-};
+  }
+}
 
 async function EditUser(req: Request, UID: string): Promise<ItransportResult> {
   const validateResult = await ValidateData.ValidatePartialUserData(req);
@@ -100,22 +98,22 @@ async function EditUser(req: Request, UID: string): Promise<ItransportResult> {
   } else {
     try {
       const resultSetHeader = await UserRepository.EditUser(validateResult, UID);
-      if(resultSetHeader.affectedRows > 0){
+      if (resultSetHeader.affectedRows > 0) {
         return {
           success: true,
           statusCode: 200,
-          message:  '更新資料成功',
+          message: '更新資料成功',
         } as ItransportResult;
-      }
-      else return {
-        success: false,
-        statusCode: 400,
-        message:  '更新資料失敗',
-      } as ItransportResult;
+      } else
+        return {
+          success: false,
+          statusCode: 400,
+          message: '更新資料失敗',
+        } as ItransportResult;
     } catch (error) {
-    throw error;
+      throw error;
+    }
   }
-};
 }
 
 async function Login(req: Request): Promise<ItransportResult> {
@@ -128,51 +126,52 @@ async function Login(req: Request): Promise<ItransportResult> {
     } as ItransportResult;
   } else {
     try {
-      if(validateResult.MobilePhone!==undefined && validateResult.Password!==undefined){
-        const results = await UserRepository.Login(validateResult.MobilePhone,validateResult.Password);
-        if (results.length!==0)
-          {
-            const selectUser = results[0] as { [key: string]: any };
-            if(await ValidateHash(validateResult.Password,selectUser['Password'])){
-              return {
-                success: true,
-                statusCode: 200,
-                message: '登入成功',
-              } as ItransportResult;
-            }
-            else{
-              return {
-                success: false,
-                statusCode: 401,
-                message: '密碼錯誤',
-              } as ItransportResult;
-            }
+      if (validateResult.MobilePhone !== undefined && validateResult.Password !== undefined) {
+        const results = await UserRepository.Login(
+          validateResult.MobilePhone,
+          validateResult.Password,
+        );
+        if (results.length !== 0) {
+          const selectUser = results[0] as { [key: string]: any };
+          if (await ValidateHash(validateResult.Password, selectUser['Password'])) {
+            return {
+              success: true,
+              statusCode: 200,
+              message: '登入成功',
+            } as ItransportResult;
+          } else {
+            return {
+              success: false,
+              statusCode: 401,
+              message: '密碼錯誤',
+            } as ItransportResult;
           }
-          return {
-            success: false,
-            statusCode: 401,
-            message: '找不到此用戶',
-          } as ItransportResult;
-      } else if(validateResult.MobilePhone===undefined && validateResult.Password!==undefined){
+        }
+        return {
+          success: false,
+          statusCode: 401,
+          message: '找不到此用戶',
+        } as ItransportResult;
+      } else if (
+        validateResult.MobilePhone === undefined &&
+        validateResult.Password !== undefined
+      ) {
         return {
           success: false,
           statusCode: 400,
           message: '請輸入手機號碼',
         } as ItransportResult;
-      } else{
+      } else {
         return {
           success: false,
           statusCode: 400,
           message: '請輸入密碼',
         } as ItransportResult;
-      };
-  } catch (error) {
-    throw error;
+      }
+    } catch (error) {
+      throw error;
+    }
   }
-  }
-};
+}
 
-export {
-  GetAllUsers, GetUserDetail, Register,
-  EditUser, Login
-};
+export { GetAllUsers, GetUserDetail, Register, EditUser, Login };

@@ -1,8 +1,12 @@
 import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import env from '../env';
 import express, { Request, Response } from 'express';
-import { SelectQuery, InsertQuery,UpdateQuery } from '../helpers/mysqlHelper';
-import { ValidateRegisterData, ValidateUserData,ValidatePartialUserData} from '../utility/validateData';
+import { SelectQuery, InsertQuery, UpdateQuery } from '../helpers/mysqlHelper';
+import {
+  ValidateRegisterData,
+  ValidateUserData,
+  ValidatePartialUserData,
+} from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { z } from 'zod';
 
@@ -44,7 +48,7 @@ const testMysqlSelect = async (req: Request, res: Response): Promise<void> => {
       ['0912345678', 'fnal978@gmail.com'],
     );
     const a = results[0];
-    const validateResult = await ValidateUserData(a)
+    const validateResult = await ValidateUserData(a);
     if (typeof validateResult === 'string') {
       res.status(400).json(validateResult);
     } else {
@@ -110,7 +114,7 @@ const testMysqlUpdate = async (req: Request, res: Response): Promise<void> => {
     res.status(400).json(validateResult);
   } else {
     try {
-      const updateField = ['Name', 'MobilePhone','Email', 'BirthDay', 'Address', 'StoreName']
+      const updateField = ['Name', 'MobilePhone', 'Email', 'BirthDay', 'Address', 'StoreName'];
 
       const uid = 'UID2024080817555212345678';
       const updateAndFilterValue = [
@@ -120,10 +124,11 @@ const testMysqlUpdate = async (req: Request, res: Response): Promise<void> => {
         validateResult.Birthday,
         validateResult.Address,
         validateResult.StoreName,
-        uid
+        uid,
       ];
-      const definedProperties:string[] = (Object.keys(validateResult) as (keyof typeof validateResult)[])
-      .filter(key => validateResult[key] !== undefined);
+      const definedProperties: string[] = (
+        Object.keys(validateResult) as (keyof typeof validateResult)[]
+      ).filter((key) => validateResult[key] !== undefined);
       res.status(200).json(definedProperties);
       // const results = await UpdateQuery('User', updateField, updateAndFilterValue,'UID');
       // if (results.affectedRows === 1) {

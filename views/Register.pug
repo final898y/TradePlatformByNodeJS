@@ -1,30 +1,82 @@
-doctype html
-html(lang="en")
-  head
-    meta(charset="UTF-8")
-    title 註冊
-    style.
-      h2 { text-align: center; }
-      div { width: 400px; margin: 10px auto; }
-      label{ width: 100%; display: inline-block; }
-      input, textarea{ width: 100%; display: inline-block; }
-      #send{ margin: 40px auto 0 auto; display: block; width: 50px; }
-  body
-    h2 註冊
-    form#comment(method="POST")
-      div
-        label(for="name") 姓名:
-        input(type="text" Name="Name" id="name")
-      div
-        label(for="email") 信箱:
-        input(type="text" name="Email" id="email")
-      div
-        label(for="MobilePhone") 手機:
-        input(type="text" name="MobilePhone" id="mobilephone")
-      div
-        label(for="Password") 密碼:
-        input(type="text" name="Password" id="password")   
-      div
-        label(for="Address") 地址:
-        textarea(name="Address" id="address" cols="20" rows="10")
-      input#send(type="submit" value="送出")
+extends toplayout.pug
+block header 
+  h1 註冊頁面
+block content
+  form(action='//localhost:3000/users/register' method='post')
+    section
+      div.intro-text-centered
+        h1 建立你的 TPF 帳號
+      div.intro-text 
+        p 只要有 TPF 帳號，就能取得 TPF 所有服務。
+        div.field-wrapper.padding.right
+          input.input-field-last-name(placeholder='姓氏', type='text' name='Name' value='testname')
+          input.input-field-first-name(placeholder='名字', type='text')
+    hr
+    section 
+      div.column.large-12
+        h1.countryLabel 國家/地區
+        label.sr-only(for='countryOptions') 選擇國家/地區
+        div.form-select-label
+          select.country-picker(id='countryOptions' aria-required='true' aria-labelledby='countryLabel')
+            option(value='' dir='auto') 請選擇國家/地區
+            optgroup(label='亞洲')
+              option(value='TWN' dir='auto') 台灣
+              option(value='IND' dir='auto') 印度
+              option(value='JPN' dir='auto') 日本
+              option(value='KOR' dir='auto') 南韓
+              option(value='KOR' dir='auto') 中國大陸
+            optgroup(label='歐洲')
+              option(value='DEU' dir='auto') 德國
+              option(value='GBR' dir='auto') 英國
+            optgroup(label='美洲')
+              option(value='USA' dir='auto') 美國
+              option(value='CAN' dir='auto') 加拿大
+      div.column.large-12
+        div.form-element
+          input.generic-input-field(placeholder='出生日期' type='date' name='Birthday' value='1994-04-16')
+        div.form-element
+          input.generic-input-field(placeholder='居住地址' type='text' name='Address' value='testAddress')
+    hr
+    section
+      div.column.large-12
+        div.form-element
+          input.generic-input-field(placeholder='name@example.com' type='email' name='Email' value='testEmail@gmail.com')
+        div.form-element
+          input.generic-input-field(placeholder='密碼' type='password' name='Password' value='testPassword@' autocomplete='off')
+        div.form-element
+          input.generic-input-field(placeholder='確認密碼' type='password' autocomplete='off')
+    hr
+    section
+      div.column.large-12
+        div.form-select-label
+          select.country-picker(aria-required='true' aria-labelledby='countryLabel')
+            option(value='' dir='auto') 國家或地區選項
+            optgroup(label='亞洲')
+              option(value='TW') +886 (台灣)
+              option(value='IN') +91 (印度)
+              option(value='JP') +81 (日本)
+              option(value='KR') +82 (南韓)
+              option(value='CN') +86 (中國大陸)
+            optgroup(label='歐洲')
+              option(value='DE') +49 (德國)
+              option(value='GB') +44 (英國)
+            optgroup(label='美洲')
+              option(value='US') +1 (美國)
+              option(value='CA') +1 (加拿大)
+        div.form-element
+          input.generic-input-field(placeholder='電話號碼' type='text' name='MobilePhone' value='0981666000')      
+    hr
+    section
+      div.column.large-12
+        div.form-element
+          input.generic-input-field(placeholder='店家名稱' type='text' name='StoreName' value='預設店家名')
+    hr
+    section
+      div.form-element
+        input.form-choice-checkbox(type='checkbox' id='news' name='news')
+        label.form-label(for="news")
+        span.form-choice-indicator
+        | 公告 
+        small.label-small.tk-caption 接收 TPF 電子郵件和通訊內容，包含 TPF 產品、服務及軟體的公告、行銷資訊、相關推薦和最新消息。
+      div.form-element
+        button(type='submit') 提交
