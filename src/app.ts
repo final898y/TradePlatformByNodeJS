@@ -1,11 +1,11 @@
 import express from 'express';
-import env from './src/env';
+import env from './env';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './src/swagger.json';
+import swaggerDocument from './swagger.json';
 
-import IndexRouter from './src/routers/indexRouter';
-import UserRouter from './src/routers/userRouter';
-import TestRouter from './src/routers/testRouter';
+import IndexRouter from './routers/indexRouter';
+import UserRouter from './routers/userRouter';
+import TestRouter from './routers/testRouter';
 
 const app = express();
 const port: number = env.PORT;
