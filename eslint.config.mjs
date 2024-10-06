@@ -10,7 +10,7 @@ export default tseslint.config(
   ...tseslint.configs.stylistic,
   ...tseslint.configs.stylisticTypeChecked,
   {
-    ignores: ['build/*', 'src/database/Mongo/*'],
+    ignores: ['build/*', 'src/database/Mongo/*','src/routers/testRouter.ts','eslint.config.mjs'],
   },
   {
     languageOptions: {

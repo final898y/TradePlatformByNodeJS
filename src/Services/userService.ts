@@ -58,32 +58,28 @@ async function Register(req: Request): Promise<ItransportResult> {
       message: validateResult,
     } as ItransportResult;
   } else {
-    try {
-      const uid = generateID('UID');
-      const addUIDtovalidateResult = { UID: uid, ...validateResult };
-      const results = await UserRepository.Register(addUIDtovalidateResult);
-      if (typeof results === 'number') {
-        return {
-          success: false,
-          statusCode: 422,
-          message: '電話號碼重複，註冊失敗',
-        } as ItransportResult;
-      } else if (results.affectedRows > 0) {
-        return {
-          success: true,
-          statusCode: 200,
-          message: '註冊成功',
-        } as ItransportResult;
-      } else
-        return {
-          success: false,
-          statusCode: 422,
-          message: '註冊失敗',
-        } as ItransportResult;
-    } catch (error) {
-      throw error;
-    }
-  }
+    const uid = generateID('UID');
+    const addUIDtovalidateResult = { UID: uid, ...validateResult };
+    const results = await UserRepository.Register(addUIDtovalidateResult);
+    if (typeof results === 'number') {
+      return {
+        success: false,
+        statusCode: 422,
+        message: '電話號碼重複，註冊失敗',
+      } as ItransportResult;
+    } else if (results.affectedRows > 0) {
+      return {
+        success: true,
+        statusCode: 200,
+        message: '註冊成功',
+      } as ItransportResult;
+    } else
+      return {
+        success: false,
+        statusCode: 422,
+        message: '註冊失敗',
+      } as ItransportResult;
+    } 
 }
 
 async function EditUser(req: Request, UID: string): Promise<ItransportResult> {
@@ -95,7 +91,6 @@ async function EditUser(req: Request, UID: string): Promise<ItransportResult> {
       message: validateResult,
     } as ItransportResult;
   } else {
-    try {
       const resultSetHeader = await UserRepository.EditUser(validateResult, UID);
       if (resultSetHeader.affectedRows > 0) {
         return {
@@ -109,10 +104,7 @@ async function EditUser(req: Request, UID: string): Promise<ItransportResult> {
           statusCode: 400,
           message: '更新資料失敗',
         } as ItransportResult;
-    } catch (error) {
-      throw error;
     }
-  }
 }
 
 async function Login(req: Request): Promise<ItransportResult> {
@@ -124,7 +116,6 @@ async function Login(req: Request): Promise<ItransportResult> {
       message: validateResult,
     } as ItransportResult;
   } else {
-    try {
       if (validateResult.MobilePhone !== undefined && validateResult.Password !== undefined) {
         const results = await UserRepository.Login(
           validateResult.MobilePhone,
@@ -167,10 +158,7 @@ async function Login(req: Request): Promise<ItransportResult> {
           message: '請輸入密碼',
         } as ItransportResult;
       }
-    } catch (error) {
-      throw error;
     }
-  }
 }
 
 export { GetAllUsers, GetUserDetail, Register, EditUser, Login };

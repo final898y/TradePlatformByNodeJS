@@ -7,8 +7,8 @@ const GetAllUsers = async (req: Request, res: Response): Promise<void> => {
     const transportResult = await UserService.GetAllUsers();
     res.status(transportResult.statusCode).send(transportResult);
   } catch (error) {
-    res.status(500).send('Error fetching user');
     console.error(error);
+    res.status(500).send('Error fetching user');
   }
 };
 
@@ -18,8 +18,8 @@ const GetUserDetail = async (req: Request, res: Response): Promise<void> => {
     const transportResult = await UserService.GetUserDetail(UID);
     res.status(transportResult.statusCode).send(transportResult);
   } catch (error) {
-    res.status(500).send('Error fetching user');
     console.error(error);
+    res.status(500).send('Error fetching user');
   }
 };
 

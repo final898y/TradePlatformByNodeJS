@@ -114,8 +114,13 @@ async function InsertQuery(
     //     "changedRows": 0
     // },
     return ResultSetHeader;
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    if(err instanceof Error){
+      const sqlErr = err as errorHandling.MySqlError;
+      errorHandling.logSqlError(sqlErr);
+      throw sqlErr;
+    }
+    throw err;
   }
 }
 
@@ -132,8 +137,13 @@ async function UpdateQuery(
       updateAndFilterValue,
     );
     return ResultSetHeader;
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    if(err instanceof Error){
+      const sqlErr = err as errorHandling.MySqlError;
+      errorHandling.logSqlError(sqlErr);
+      throw sqlErr;
+    }
+    throw err;
   }
 }
 
@@ -160,8 +170,13 @@ async function InsertAfterSelectQuery(
     } else {
       return 0;
     }
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    if(err instanceof Error){
+      const sqlErr = err as errorHandling.MySqlError;
+      errorHandling.logSqlError(sqlErr);
+      throw sqlErr;
+    }
+    throw err;
   }
 }
 
