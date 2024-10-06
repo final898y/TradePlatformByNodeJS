@@ -7,24 +7,20 @@ import generateID from '../utility/IDGenerater';
 import { ValidateHash } from '../utility/hashData';
 
 async function GetAllUsers(): Promise<ItransportResult> {
-  try {
-    const userDetailArray = await UserRepository.GetAllUsers();
-    if (userDetailArray.length === 0) {
-      return {
-        success: false,
-        statusCode: 404,
-        message: 'User not found.',
-      } as ItransportResult;
-    }
+  const userDetailArray = await UserRepository.GetAllUsers();
+  if (userDetailArray.length === 0) {
     return {
-      success: true,
-      statusCode: 200,
-      message: 'Get the results.',
-      data: userDetailArray,
+      success: false,
+      statusCode: 404,
+      message: 'User not found.',
     } as ItransportResult;
-  } catch (error) {
-    throw error;
   }
+  return {
+    success: true,
+    statusCode: 200,
+    message: 'Get the results.',
+    data: userDetailArray,
+  } as ItransportResult;
 }
 
 async function GetUserDetail(UID: string): Promise<ItransportResult> {
@@ -34,10 +30,9 @@ async function GetUserDetail(UID: string): Promise<ItransportResult> {
       statusCode: 400,
       message: 'UID is required.',
     } as ItransportResult;
-  }
-  try {
-    const userDetailObject = await UserRepository.GetUserDetail(UID);
-    if (userDetailObject === undefined) {
+  }else {
+    const results = await UserRepository.GetUserDetail(UID);
+    if (results.length === 0) {
       return {
         success: false,
         statusCode: 404,
@@ -48,11 +43,9 @@ async function GetUserDetail(UID: string): Promise<ItransportResult> {
         success: true,
         statusCode: 200,
         message: "Get the user's details.",
-        data: userDetailObject,
+        data: results[0],
       } as ItransportResult;
     }
-  } catch (error) {
-    throw error;
   }
 }
 
@@ -68,8 +61,14 @@ async function Register(req: Request): Promise<ItransportResult> {
     try {
       const uid = generateID('UID');
       const addUIDtovalidateResult = { UID: uid, ...validateResult };
-      const resultSetHeader = await UserRepository.Register(addUIDtovalidateResult);
-      if (resultSetHeader.affectedRows === 1) {
+      const results = await UserRepository.Register(addUIDtovalidateResult);
+      if (typeof results === 'number') {
+        return {
+          success: false,
+          statusCode: 422,
+          message: '電話號碼重複，註冊失敗',
+        } as ItransportResult;
+      } else if (results.affectedRows > 0) {
         return {
           success: true,
           statusCode: 200,

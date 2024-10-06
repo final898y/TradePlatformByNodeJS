@@ -1,32 +1,20 @@
 import { ResultSetHeader } from 'mysql2/promise';
 import { User } from '../model/userModel';
-import { SelectQuery, InsertQuery, UpdateQuery } from '../helpers/mysqlHelper';
+import * as mysqlHelper from '../helpers/mysqlHelper';
 import { Hashdata } from '../utility/hashData';
 import { ValidateUserPartial } from '../utility/validateData';
 
 async function GetAllUsers(): Promise<object[]> {
-  try {
-    const results = await SelectQuery('User');
-    const userDetailArray: object[] = results;
-    return userDetailArray;
-  } catch (error) {
-    throw error;
-  }
+  return await mysqlHelper.SelectQuery('User');
 }
 
-async function GetUserDetail(UID: string): Promise<object> {
-  try {
-    const results = await SelectQuery('User', ['UID'], [UID]);
-    const userDetailObject: object = results[0];
-    return userDetailObject;
-  } catch (error) {
-    throw error;
-  }
+async function GetUserDetail(UID: string): Promise<object[]> {
+  return await mysqlHelper.SelectQuery('User', ['UID'], [UID]);
 }
 
-async function Register(RegisterData: User): Promise<ResultSetHeader> {
+async function Register(RegisterData: User): Promise<ResultSetHeader | number> {
   try {
-    const filterField = [
+    const insertField = [
       'UID',
       'Name',
       'MobilePhone',
@@ -37,7 +25,7 @@ async function Register(RegisterData: User): Promise<ResultSetHeader> {
       'StoreName',
     ];
     const hashedPassword = await Hashdata(RegisterData.Password);
-    const filterValue = [
+    const insertValue = [
       RegisterData.UID,
       RegisterData.Name,
       RegisterData.MobilePhone,
@@ -47,7 +35,13 @@ async function Register(RegisterData: User): Promise<ResultSetHeader> {
       RegisterData.Address,
       RegisterData.StoreName,
     ];
-    return InsertQuery('User', filterField, filterValue);
+    return mysqlHelper.InsertAfterSelectQuery(
+      'User',
+      insertValue,
+      ['MobilePhone'],
+      [RegisterData.MobilePhone],
+      insertField,
+    );
   } catch (error) {
     throw error;
   }
@@ -67,19 +61,18 @@ async function EditUser(UpdateData: ValidateUserPartial, UID: string): Promise<R
       UpdateData.StoreName,
       UID,
     ].filter((value) => value !== undefined);
-    return UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
+    return mysqlHelper.UpdateQuery('User', updateField, updateAndFilterValue, 'UID');
   } catch (error) {
     throw error;
   }
 }
 
 async function Login(MobilePhone: string, Password: string): Promise<object[]> {
-  try {
-    const results = await SelectQuery('User', ['MobilePhone'], [MobilePhone]);
-    return results;
-  } catch (error) {
-    throw error;
+  const results = await mysqlHelper.SelectQuery('User', ['MobilePhone'], [MobilePhone]);
+  if(results!==undefined){
+      return results;
   }
+  return []
 }
 
 export { GetAllUsers, GetUserDetail, Register, EditUser, Login };

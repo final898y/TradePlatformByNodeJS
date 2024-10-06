@@ -8,9 +8,8 @@ import {
   ValidatePartialUserData,
 } from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
-import { z } from 'zod';
+import * as errorHandling from '../utility/errorHandling'
 
-import * as userModel from '../model/userModel';
 
 const pool = mysql.createPool({
   host: env.MYSQLHOST_TEST,
@@ -41,21 +40,32 @@ const testMysqlSelectAll = async (req: Request, res: Response): Promise<void> =>
 };
 
 const testMysqlSelect = async (req: Request, res: Response): Promise<void> => {
-  try {
+  const MobilePhone = req.query.MobilePhone as string;
+   try{
     const results = await SelectQuery(
       'User',
-      ['MobilePhone', 'Email'],
-      ['0912345678', 'fnal978@gmail.com'],
+      ['MobilePhone'],
+      [MobilePhone],
     );
-    const a = results[0];
-    const validateResult = await ValidateUserData(a);
-    if (typeof validateResult === 'string') {
-      res.status(400).json(validateResult);
-    } else {
-      res.status(200).json(validateResult.Name);
+    if(results===undefined){
+      res.status(400).json('錯誤');
     }
-  } catch (error) {
-    throw error;
+    else{
+      const a = results[0];
+      const validateResult = await ValidateUserData(a);
+      if (typeof validateResult === 'string') {
+        res.status(400).json(validateResult);
+      } else {
+        res.status(200).json(validateResult.Name);
+      }
+    }
+
+  } catch (err) {
+    if(err instanceof Error){
+      const sqlErr = err as errorHandling.MySqlError;
+      errorHandling.logSqlError(sqlErr);
+      throw sqlErr;
+    }
   }
 };
 
@@ -77,7 +87,7 @@ const testMysqlInsert = async (req: Request, res: Response): Promise<void> => {
       //     "1994-04-16", "testAddress", "testStoreName"
       //   )
       // `);
-      const filterField = [
+      const insertField = [
         'UID',
         'Name',
         'MobilePhone',
@@ -88,7 +98,7 @@ const testMysqlInsert = async (req: Request, res: Response): Promise<void> => {
         'StoreName',
       ];
       const uid = generateID('UID');
-      const filterValue = [
+      const insertValue = [
         uid,
         validateResult.Name,
         validateResult.MobilePhone,
@@ -98,7 +108,7 @@ const testMysqlInsert = async (req: Request, res: Response): Promise<void> => {
         validateResult.Address,
         validateResult.StoreName,
       ];
-      const result = await InsertQuery('User', filterField, filterValue);
+      const result = await InsertQuery('User', insertValue, insertField);
       if (result.affectedRows === 1) {
         res.status(200).json('註冊成功');
       }

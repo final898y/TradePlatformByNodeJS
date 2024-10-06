@@ -10,7 +10,8 @@
     "startdc": "docker compose up -d",
     "startdb": "docker compose up -d mysql redis mongo",
     "startmysql": "docker compose up -d mysql",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "check": "npx eslint"
   },
   "devDependencies": {
     "@eslint/js": "^9.12.0",

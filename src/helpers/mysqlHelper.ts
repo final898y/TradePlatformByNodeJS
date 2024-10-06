@@ -1,6 +1,8 @@
 import mysql, { RowDataPacket, ResultSetHeader } from 'mysql2/promise';
 import env from '../env';
 
+import * as errorHandling from '../utility/errorHandling'
+
 function BuildMysqlStatementSelect(tableName: string): string;
 function BuildMysqlStatementSelect(tableName: string, filterField?: string[]): string;
 
@@ -12,7 +14,7 @@ function BuildMysqlStatementSelect(tableName: string, filterField?: string[]): s
   if (filterField.length === 1) {
     return baseStatement + ' WHERE ' + filterField[0] + ' = ?';
   }
-  let filterStatement = filterField.join(' = ? AND ');
+  const filterStatement = filterField.join(' = ? AND ');
   return baseStatement + ' WHERE ' + filterStatement + ' = ?';
 }
 
@@ -24,7 +26,7 @@ function BuildMysqlStatementInsert(tableName: string, filterField?: string[]): s
   if (filterField.length === 1) {
     return baseStatement + filterField[0] + ') VALUES (?)';
   }
-  let filterStatement = filterField.join(', ');
+  const filterStatement = filterField.join(', ');
   const questionMarkArray = Array(filterField.length).fill('?');
   const questionMarkString = questionMarkArray.join(', ');
   return baseStatement + filterStatement + ') VALUES (' + questionMarkString + ')';
@@ -39,10 +41,30 @@ function BuildMysqlStatementUpdate(
   if (updateField.length === 1) {
     return baseStatement + updateField[0] + '= ? WHERE ' + filterField + '= ?';
   } else {
-    let updateStatement = updateField.join('= ?, ');
+    const updateStatement = updateField.join('= ?, ');
     return baseStatement + updateStatement + '= ? ' + 'WHERE ' + filterField + '= ?';
   }
 }
+
+// INSERT INTO your_table (column1, column2, ...)
+// SELECT value1, value2, ...
+// FROM DUAL
+// WHERE NOT EXISTS (SELECT 1 FROM your_table WHERE condition);
+// function BuildMysqlStatementInsetAfterSelect(tableName: string, insertField?: string[],filterField?: string[]): string {
+//   const baseStatement = `INSERT INTO ${tableName} (`;
+//   const statementSelect = BuildMysqlStatementSelect(tableName,filterField)
+//   if (insertField === undefined) {
+//     return baseStatement.slice(0, -1);
+//   }
+//   if (insertField.length === 1) {
+//     return baseStatement + insertField[0] + ') SELECT ?'+' WHERE NOT EXISTS ('+statementSelect+')';
+//   }
+//   let filterStatement = insertField.join(', ');
+//   const questionMarkArray = Array(insertField.length).fill('?');
+//   const questionMarkString = questionMarkArray.join(', ');
+//   const statementInsert =  baseStatement + filterStatement + ') SELECT ' + questionMarkString + '';
+//   return statementInsert+' WHERE NOT EXISTS ('+statementSelect+')'
+// }
 
 const pool = mysql.createPool({
   host: env.MYSQLHOST_TEST,
@@ -61,21 +83,26 @@ async function SelectQuery(
     const sqlStatement = BuildMysqlStatementSelect(tableName, filterField);
     const [results, fields] = await pool.query<RowDataPacket[]>(sqlStatement, filterValue);
     return results;
-  } catch (error) {
-    throw error;
+  } catch (err) {
+    if(err instanceof Error){
+      const sqlErr = err as errorHandling.MySqlError;
+      errorHandling.logSqlError(sqlErr);
+      throw sqlErr;
+    }
+    return [];  // 錯誤處理備案，防止未知錯誤
   }
 }
 
 async function InsertQuery(
   tableName: string,
-  filterField?: string[],
-  filterValue?: any[],
+  insertValue: any[],
+  insertField?: string[],
 ): Promise<ResultSetHeader> {
   try {
-    const sqlStatement = BuildMysqlStatementInsert(tableName, filterField);
+    const sqlStatement = BuildMysqlStatementInsert(tableName, insertField);
     const [ResultSetHeader, FieldPacket] = await pool.query<ResultSetHeader>(
       sqlStatement,
-      filterValue,
+      insertValue,
     );
     //   ResultSetHeader{
     //     "fieldCount": 0,
@@ -104,19 +131,38 @@ async function UpdateQuery(
       sqlStatement,
       updateAndFilterValue,
     );
-    //   ResultSetHeader{
-    //     "fieldCount": 0,
-    //     "affectedRows": 1,
-    //     "insertId": 0,
-    //     "info": "",
-    //     "serverStatus": 2,
-    //     "warningStatus": 0,
-    //     "changedRows": 0
-    // },
     return ResultSetHeader;
   } catch (error) {
     throw error;
   }
 }
 
-export { SelectQuery, InsertQuery, UpdateQuery };
+async function InsertAfterSelectQuery(
+  tableName: string,
+  insertValue: any[],
+  filterField: string[],
+  filterValue: any[],
+  insertField?: string[],
+): Promise<ResultSetHeader | number> {
+  try {
+    const selectStatement = BuildMysqlStatementSelect(tableName, filterField);
+    const insertStatement = BuildMysqlStatementInsert(tableName, insertField);
+    const connection = await pool.getConnection();
+
+    const [results, fields] = await connection.query<RowDataPacket[]>(selectStatement, filterValue);
+    if (results.length === 0) {
+      const [ResultSetHeader, FieldPacket] = await connection.query<ResultSetHeader>(
+        insertStatement,
+        insertValue,
+      );
+      connection.release();
+      return ResultSetHeader;
+    } else {
+      return 0;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export { SelectQuery, InsertQuery, UpdateQuery, InsertAfterSelectQuery };

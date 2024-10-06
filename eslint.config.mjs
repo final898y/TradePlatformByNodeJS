@@ -10,14 +10,14 @@ export default tseslint.config(
   ...tseslint.configs.stylistic,
   ...tseslint.configs.stylisticTypeChecked,
   {
-    ignores: ["build/*","src/database/Mongo/*"]
-},
-{
-  languageOptions: {
-    parserOptions: {
-      projectService: true,
-      tsconfigRootDir: import.meta.dirname,
+    ignores: ['build/*', 'src/database/Mongo/*'],
+  },
+  {
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
     },
   },
-},
 );
