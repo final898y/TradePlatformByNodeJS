@@ -20,6 +20,7 @@ const envSchema = z.object({
   MYSQLPASSWORD: z.string(),
   MYSQLPORT: z.string().transform((val) => parseInt(val, 10)),
   MYSQLPORT_TEST: z.string().transform((val) => parseInt(val, 10)),
+  JWTKEY: z.string(),
 });
 
 // 驗證並解析環境變數
