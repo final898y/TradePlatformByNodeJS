@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-
 import * as UserService from '../services/userService';
 
 const GetAllUsers = async (req: Request, res: Response): Promise<void> => {

@@ -5,7 +5,8 @@ import ItransportResult from '../model/transportModel';
 import * as ValidateData from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { ValidateHash } from '../utility/hashData';
-import * as JwtHelper from '../helpers/jwtHelper'
+import * as JwtHelper from '../helpers/jwtHelper';
+
 
 async function GetAllUsers(): Promise<ItransportResult> {
   const userDetailArray = await UserRepository.GetAllUsers();
