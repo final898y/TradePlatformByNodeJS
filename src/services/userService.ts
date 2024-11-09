@@ -5,6 +5,7 @@ import ItransportResult from '../model/transportModel';
 import * as ValidateData from '../utility/validateData';
 import generateID from '../utility/IDGenerater';
 import { ValidateHash } from '../utility/hashData';
+import * as JwtHelper from '../helpers/jwtHelper'
 
 async function GetAllUsers(): Promise<ItransportResult> {
   const userDetailArray = await UserRepository.GetAllUsers();
@@ -124,10 +125,12 @@ async function Login(req: Request): Promise<ItransportResult> {
         if (results.length !== 0) {
           const selectUser = results[0] as { [key: string]: any };
           if (await ValidateHash(validateResult.Password, selectUser['Password'])) {
+            const JwtToken = JwtHelper.createJwt(validateResult.MobilePhone,selectUser['Password'])
             return {
               success: true,
               statusCode: 200,
               message: '登入成功',
+              JwtToken:JwtToken,
             } as ItransportResult;
           } else {
             return {
