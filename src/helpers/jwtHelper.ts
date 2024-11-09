@@ -17,7 +17,7 @@ async function createJwt(mobilephone:string,password:string) :Promise<string>{
 async function verifyJwt(token:string):Promise<boolean>{
     try{
         const decodedjwt =  jwt.verify(token,JwtKEY,JwtSignoptions);
-        if(typeof decodedjwt !== 'string'){
+        if(decodedjwt!==undefined && typeof decodedjwt !== 'string'){
             const checkJwtToken = await redisHelper.getData(decodedjwt['MobilePhone'])
             if(checkJwtToken[0]){
                 return true
