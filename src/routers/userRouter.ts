@@ -1,7 +1,6 @@
 import express from 'express';
 import * as UserController from '../controllers/userController';
 import authenticateToken from '../middlewares/authorization';
-
 const router = express.Router();
 
 router.get('/search', UserController.GetUserDetail);

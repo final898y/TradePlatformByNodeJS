@@ -126,7 +126,7 @@ async function Login(req: Request): Promise<ItransportResult> {
         if (results.length !== 0) {
           const selectUser = results[0] as { [key: string]: any };
           if (await ValidateHash(validateResult.Password, selectUser['Password'])) {
-            const JwtToken = JwtHelper.createJwt(validateResult.MobilePhone,selectUser['Password'])
+            const JwtToken = await JwtHelper.createJwt(validateResult.MobilePhone,selectUser['Password'])
             return {
               success: true,
               statusCode: 200,
