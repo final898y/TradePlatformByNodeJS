@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-
 import * as UserService from '../services/userService';
 
 const GetAllUsers = async (req: Request, res: Response): Promise<void> => {
@@ -47,7 +46,8 @@ const EditUser = async (req: Request, res: Response): Promise<void> => {
 const Login = async (req: Request, res: Response): Promise<void> => {
   try {
     const transportResult = await UserService.Login(req);
-    res.status(transportResult.statusCode).send(transportResult.message);
+    res.status(transportResult.statusCode).json({
+      'message':transportResult.message,'JwtToket':transportResult.JwtToken});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: '登入失敗', error });

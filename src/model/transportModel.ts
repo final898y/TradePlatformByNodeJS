@@ -3,4 +3,5 @@ export default interface ItransportResult {
   statusCode: number;
   message: string;
   data?: object;
+  JwtToken?: string;
 }
