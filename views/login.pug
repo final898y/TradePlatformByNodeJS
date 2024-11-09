@@ -1,0 +1,8 @@
+extends toplayout.pug
+block header 
+  h1 TPF 登入畫面
+block content
+  h1 請輸入您的帳號和密碼
+  form(action='//localhost:3000/users/login' method='post')
+  input.generic-input-field(placeholder='帳號' type='test' name='' value='testPassword@' autocomplete='off')
+  input.generic-input-field(placeholder='密碼' type='password' name='Password' value='testPassword@' autocomplete='off')
