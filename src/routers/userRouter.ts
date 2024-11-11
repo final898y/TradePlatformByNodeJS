@@ -11,6 +11,6 @@ router.get('/register', (req, res) => {
 
 router.post('/register', UserController.Register);
 router.put('/edit',authenticateToken, UserController.EditUser);
-router.get('/login', UserController.Login);
+router.post('/login', UserController.Login);
 
 export default router;

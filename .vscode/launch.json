@@ -11,7 +11,11 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/build/app.js",
       "preLaunchTask": "tsc: watch - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/**/*.js"]
+      "outFiles": ["${workspaceFolder}/**/*.js"],
+      // "env": {
+      //     "NODE_EXTRA_CA_CERTS": "${workspaceFolder}/src/cert.pem",
+      //     "NODE_TLS_REJECT_UNAUTHORIZED" : "0",
+      //   }
     }
   ]
 }
