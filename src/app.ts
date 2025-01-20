@@ -4,15 +4,18 @@ import https from 'https';
 import http from 'http';
 import cors from 'cors';
 import path from 'path';
+import { fileURLToPath } from "url";
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json';
+import swaggerDocument from './swagger.json' assert { type: 'json' };
 
-import env from './env';
-import IndexRouter from './routers/indexRouter';
-import UserRouter from './routers/userRouter';
-import TestRouter from './routers/testRouter';
+import env from './env.js';
+import IndexRouter from './routers/indexRouter.js';
+import UserRouter from './routers/userRouter.js';
+import TestRouter from './routers/testRouter.js';
 
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const app = express();
 const httpport: number = env.HTTPPORT;
 const httpsport: number = env.HTTPSPORT;

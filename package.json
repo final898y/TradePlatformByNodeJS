@@ -2,6 +2,7 @@
   "name": "TradePlatform",
   "author": "final898y",
   "license": "MPL 2.0",
+  "type": "module",
   "scripts": {
     "start": "ts-node ./src/app.ts",
     "build": "tsc --project tsconfig.json",
