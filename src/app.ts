@@ -27,6 +27,7 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'https://localhost:443',
+    'http://localhost:5173',
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization'],
