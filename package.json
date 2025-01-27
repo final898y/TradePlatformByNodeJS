@@ -1,12 +1,12 @@
 {
-  "name": "TradePlatform",
+  "name": "tradeplatform",
   "author": "final898y",
   "license": "MPL 2.0",
   "type": "module",
   "scripts": {
-    "start": "ts-node ./src/app.ts",
+    "start": "node --loader ts-node/esm ./src/app.ts",
     "build": "tsc --project tsconfig.json",
-    "startjs": "node ./build/app.js",
+    "startjs": "node ./build/src/app.js",
     "builddc": "docker compose build --no-cache --pull",
     "startdc": "docker compose up -d",
     "startdb": "docker compose up -d mysql redis mongo",

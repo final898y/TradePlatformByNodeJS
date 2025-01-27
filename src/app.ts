@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from "url";
 
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './swagger.json' assert { type: 'json' };
+import swaggerDocument from './swagger.json' with { type: 'json' };
 
 import env from './env.js';
 import IndexRouter from './routers/indexRouter.js';
